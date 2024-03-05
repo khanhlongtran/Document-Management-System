@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using DocumentsManagementSystem.Models
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <form asp-action="search" asp-controller="home" method="post">
+        Search:<input type="text" name="searchValue" value="" />
+        <input type="submit" name="submit" value="Search" />
+    </form>
+
+    <p style="text-align:left"><a asp-action="create" asp-controller="home" style="font-size:20px;">Create a blank document</a></p>
+    
+
+        <a asp-action="sort" asp-controller="home" asp-route-sort="dateDesc"> Sort By Date (Desc)</a>
+        <br>
+        <a asp-action="sort" asp-controller="home" asp-route-sort="dateAsc">Sort By Date (Asc)</a>
+        <br>
+        <a asp-action="sort" asp-controller="home" asp-route-sort="nameAsc">Sort By File Name</a>
+        <br>
+ 
+    <table>
+
+        @foreach (Document d in Model)
+        {
+            <tr>
+                <td><a asp-action="editview" asp-controller="home" asp-route-FileId="@d.FileId">@d.FileName</a></td>
+                <td> </td>
+                <td> </td>
+                
+                <td><a asp-action="delete" asp-controller="home" asp-route-FileId="@d.FileId">Delete</a></td>
+                <td>Last Modifier : @d.LastModifier</td>
+                <td><a asp-action="index" asp-controller="version" asp-route-FileId="@d.FileId">Restore</a></td>
+
+            </tr>
+        }
+        <div>@ViewBag.DeleteFailed</div>
+
+    </table>
+</div>

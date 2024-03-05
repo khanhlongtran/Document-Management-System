@@ -1,0 +1,40 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model CreateViewModel
+
+<form asp-action="create" asp-controller="home" method="post">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name" asp-for="FileName">File Name:</label>
+                    <input name="FileName" type="text" class="form-control" id="name" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="editTextArea" asp-for="FileContent">Content:</label>
+                    <textarea name="FileContent" id="editTextArea" class="form-control" rows="8"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="radio" id="private" asp-for="FileStatus" value="false">
+                <label for="private">Private</label><br>
+                <input type="radio" id="public" asp-for="FileStatus" value="true">
+                <label for="public">Public</label><br>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <input type="Submit" class="btn btn-primary" value="Save" />
+            <button asp-controller="home" asp-action="index" class="btn btn-danger">Cancel</button>
+        </div>
+    </div>
+</form>
+<div>@ViewBag.CreateFailed</div>

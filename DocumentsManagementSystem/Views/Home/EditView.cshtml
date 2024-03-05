@@ -1,0 +1,85 @@
+﻿@model DocumentsManagementSystem.Models.Document;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Real-Time Collaborative Text Editor with SignalR</title>
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+    <form asp-controller="Home" asp-action="EditView" method="post">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="name">File Name:</label>
+                        <input name="FileName" type="text" class="form-control" value="@Model.FileName" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="editTextArea">Content:</label>
+                        <textarea name="FileContent" id="editTextArea" class="form-control" rows="8">@Model.FileContent</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="radio" id="private" name="FileStatus" value="false" checked="@(!Model.FileStatus)">
+                    @*false + false => true*@
+                    <label for="private">Private</label><br>
+                    <input type="radio" id="public" name="FileStatus" value="true" checked="@(Model.FileStatus)">
+                    @*false + true => false*@
+                    <label for="public">Public</label><br>
+                </div>
+            </div>
+            <input type="hidden" value="@Model.FileId" name="FileId" />
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="Submit1" type="Submit" class="btn btn-primary" value="Save" />
+                </div>
+                <div class="col-md-6">
+                    <button asp-controller="home" asp-action="index" class="btn btn-danger">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/editHub")
+            .build();
+
+        //connection.on("ReceiveTextUpdate", (newText) => {
+        //    document.getElementById("editTextArea").value = newText;
+        //});
+        connection.on("ReceiveTextUpdate", (newText) => {
+            document.getElementById("editTextArea").value = newText;
+        });
+
+
+        connection.start().catch(err => console.error(err));
+
+        const editTextArea = document.getElementById("editTextArea");
+
+        // Event listener for text change
+        editTextArea.addEventListener("input", () => {
+            const newText = editTextArea.value;
+
+            // Send text update to the server
+            connection.invoke("SendTextUpdate", newText).catch(err => console.error(err));
+        });
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model DocumentsManagementSystem.Models.FilesViewModel
+<div class="text-left">
+    <h2 style="margin-bottom:50px">Multiple File Upload</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="files" multiple />
+        <button type="submit">Upload</button>
+    </form>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success" style="margin-top: 50px">
+            @ViewBag.Message
+        </div>
+    }
+
+    <p style="margin-top: 50px"> List of files</p>
+    <ul>
+        @foreach (var item in Model.Files)
+        {
+            <li>
+                <a asp-action="Download" asp-route-fileName="@item.Name" target="_blank">@item.Name</a>
+            </li>
+        }
+    </ul>
+</div>
